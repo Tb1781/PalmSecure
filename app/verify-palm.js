@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { Image } from "expo-image";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
+import supabase from "./utils/supabase";
 
 export default function VerifyPalm() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -10,6 +11,7 @@ export default function VerifyPalm() {
   const [imageUri, setImageUri] = useState(null);
   const [cameraVisible, setCameraVisible] = useState(false);
   const [facing, setFacing] = useState("back");
+
 
   if (!permission) {
     return null;
@@ -26,11 +28,9 @@ export default function VerifyPalm() {
     );
   }
 
-  // Capture the Image
   const takePicture = async () => {
     const photo = await ref.current?.takePictureAsync();
     if (photo?.uri) {
-      // Resize image to 128x128
       const resizedPhoto = await ImageManipulator.manipulateAsync(
         photo.uri,
         [{ resize: { width: 1024, height: 1024 } }],
@@ -41,15 +41,60 @@ export default function VerifyPalm() {
     }
   };
 
-  // Reset the Image
   const retakePicture = () => {
     setImageUri(null);
     setCameraVisible(true);
   };
 
-  // Confirm the Image
-  const confirmPicture = () => {
-    console.log("Image confirmed:", imageUri);
+  const confirmPicture = async () => {
+    if (!imageUri) {
+      console.log("No image found to upload.");
+      return;
+    }
+
+    try {
+
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      const arrayBuffer = await new Response(blob).arrayBuffer();
+
+      const fileName = `${Date.now()}.png`;
+
+      const { data, error } = await supabase.storage
+        .from("my-bucket")
+        .upload(fileName, arrayBuffer, {
+          contentType: "image/png",
+          upsert: false,
+        });
+
+      if (error) {
+        console.error("Upload error:", error.message);
+        return;
+      }
+
+      console.log("Image uploaded successfully:", data?.path);
+
+      // Delete image after verification (Placeholder backend request omitted)
+    // const backendResponse = await fetch("https://your-backend-server.com/verify", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ imagePath: data?.path }),
+    // });
+
+    // const verificationResult = await backendResponse.json();
+    // console.log("Verification Result:", verificationResult);
+      const { error: deleteError } = await supabase.storage
+        .from("my-bucket")
+        .remove([data?.path]);
+
+      if (deleteError) {
+        console.error("Delete error:", deleteError.message);
+      } else {
+        console.log("Image deleted successfully.");
+      }
+    } catch (err) {
+      console.error("Error processing image:", err.message);
+    }
   };
 
   const renderCamera = () => (
