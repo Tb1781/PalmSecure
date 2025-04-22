@@ -5,16 +5,17 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Dimensions,
+  // Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import supabase from "./utils/supabase"; // Ensure Supabase client is correctly configured
+import supabase from "../utils/supabase";
+import NavigationBar from "../components/NavigationBar";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+// const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function AdminDashboard() {
+export default function Home() {
   const router = useRouter();
   const [totalUsers, setTotalUsers] = useState(0);
   const [verifiedUsers, setVerifiedUsers] = useState(0);
@@ -28,7 +29,10 @@ export default function AdminDashboard() {
 
   // Fetch user data and calculate metrics
   const fetchUserData = async () => {
+    // const { data: session } = await supabase.auth.getSession();
+    // console.log("Auth session:", session);
     const { data: users, error } = await supabase.from("Users").select("*");
+    // console.log("Users fetched: ", users.length)
     if (error) {
       console.error("Error fetching users:", error.message);
       return;
@@ -55,14 +59,12 @@ export default function AdminDashboard() {
   // Logout button handler
   const handleLogout = async () => {
     try {
-      // Log out the user using Supabase
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("Logout failed:", error.message);
         Alert.alert("Logout Failed", error.message);
       } else {
         console.log("User logged out successfully");
-        // Redirect to the root route (/)
         router.push("/");
       }
     } catch (error) {
@@ -74,12 +76,15 @@ export default function AdminDashboard() {
     <View style={styles.container}>
       {/* Header with Logout */}
       <View style={styles.header}>
-        <Text style={styles.title}>Admin Dashboard</Text>
+        <Text style={styles.title}>Dashboard</Text>
         <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
           <MaterialIcons name="logout" size={24} color="#333" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>
+
+
+      <NavigationBar />
 
       {/* Metrics Section */}
       <View style={styles.statsContainer}>
@@ -125,12 +130,12 @@ export default function AdminDashboard() {
         <Text style={styles.recentActivityTitle}>Recent Activity</Text>
         <FlatList
           data={recentActivity}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item) => item.id || item.Name}
           renderItem={({ item }) => (
             <View style={styles.activityItem}>
               <FontAwesome name="user" size={40} color="#ccc" />
               <View style={styles.activityDetails}>
-                <Text style={styles.userName}>{item.Name}</Text>
+                <Text style={styles.userName}>{item.Name || "N/A"}</Text>
                 <Text style={styles.activityTime}>
                   {calculateTimeAgo(item.created_at)}
                 </Text>

@@ -32,7 +32,8 @@ const AdminLogin = () => {
     } else {
       console.log('Logged in admin:', data.user);
       // Navigate to a secure area (for example, an admin dashboard)
-      router.push('/admin-dashboard'); 
+      // router.push('/admin-dashboard');
+      router.push('/admin/home');   
     }
     setLoading(false);
   };
