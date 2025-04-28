@@ -12,6 +12,9 @@ import * as ImagePicker from 'expo-image-picker';
 import supabase from '../utils/supabase';
 import ImagePickerComponent from '../components/ImagePicker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'; // For checkmark and alert triangle
+import * as FileSystem from 'expo-file-system';
+import NavigationBar from "../components/NavigationBar";
+
 
 export default function AddUser() {
   const [fullName, setFullName] = useState('');
@@ -20,6 +23,13 @@ export default function AddUser() {
   // State for uploaded images
   const [leftPalmImages, setLeftPalmImages] = useState([]);
   const [rightPalmImages, setRightPalmImages] = useState([]);
+
+  const resetForm = () => {
+    setFullName('');
+    setEmail('');
+    setLeftPalmImages([]);
+    setRightPalmImages([]);
+  };
 
   // Request permissions for image picker on component mount
   React.useEffect(() => {
@@ -90,24 +100,66 @@ export default function AddUser() {
   };
 
   // Function to upload an image to Supabase bucket
-  const uploadImage = async (image, fileName) => {
-    const { uri } = image;
-    // const filePath = `user-palmprint-images/${fileName}`;
-    const filePath = `${fileName}`;
+  // const uploadImage = async (image, fileName) => {
+  //   const { uri } = image;
+  //   // const filePath = `user-palmprint-images/${fileName}`;
+  //   const filePath = `${fileName}`;
 
+  //   const { error } = await supabase.storage
+  //     .from('user-palmprint-images')
+  //     .upload(filePath, uri);
+
+  //   if (error) {
+  //     console.error('Error uploading image:', error.message);
+  //     throw error;
+  //   }
+  // };
+
+  // Modified uploadImage function
+  const uploadImage = async (image, fileName) => {
+  const { uri, type } = image;
+  try {
+    // Read the file content from local URI
+    const fileContent = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    // Convert Base64 string to Uint8Array
+    const arrayBuffer = base64ToUint8Array(fileContent);
+
+    // Upload the array buffer with proper content type
     const { error } = await supabase.storage
       .from('user-palmprint-images')
-      .upload(filePath, uri);
+      .upload(fileName, arrayBuffer, {
+        contentType: type || 'image/jpeg',
+      });
 
-    if (error) {
-      console.error('Error uploading image:', error.message);
-      throw error;
-    }
-  };
+    if (error) throw error;
+  } catch (error) {
+    console.error('Upload error:', error);
+    throw error;
+  }
+};
+
+// Helper function to convert Base64 to Uint8Array
+const base64ToUint8Array = (base64) => {
+  const raw = atob(base64);
+  const array = new Uint8Array(new ArrayBuffer(raw.length));
+  for (let i = 0; i < raw.length; i++) {
+    array[i] = raw.charCodeAt(i);
+  }
+  return array;
+};
+
+// Polyfill for atob if needed (React Native doesn't have it by default)
+if (typeof atob === 'undefined') {
+  global.atob = (b64) => Buffer.from(b64, 'base64').toString('binary');
+}
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Wrap the entire content in ScrollView */}
+      <NavigationBar />
       <Text style={styles.title}>Add New User</Text>
 
       {/* Full Name */}
@@ -168,6 +220,14 @@ export default function AddUser() {
         disabled={!fullName || !email || leftPalmImages.length < 2 || rightPalmImages.length < 2}
       >
         <Text style={styles.registerButtonText}>Register User</Text>
+      </TouchableOpacity>
+
+            {/* Clear Form Button */}
+            <TouchableOpacity
+        style={[styles.registerButton, { backgroundColor: '#007bff' }]}
+        onPress={resetForm}
+      >
+        <Text style={styles.registerButtonText}>Clear Form</Text>
       </TouchableOpacity>
     </ScrollView>
   );

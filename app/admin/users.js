@@ -12,6 +12,7 @@ import supabase from '../utils/supabase';
 import UserCard from '../components/UserCard';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import EditUserModal from '../components/EditUserModal';
+import NavigationBar from "../components/NavigationBar";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -82,6 +83,7 @@ export default function Users() {
         <Text style={styles.title}>Users</Text>
       </View>
       <View style={styles.searchContainer}>
+        <NavigationBar />
         <TextInput
           style={styles.searchInput}
           placeholder="Search users..."
