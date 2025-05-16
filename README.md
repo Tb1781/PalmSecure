@@ -1,10 +1,3 @@
-Got it. Below is the **complete and detailed README.md file** for your project — fully reflecting all the work you've done (Frontend, Supabase, Backend API, Palmprint Verification, Admin module, etc.).
-
----
-
-## ✅ Complete `README.md` File (Code Version):
-
-```markdown
 # 🖐️ PalmSecure: Palmprint Verification App (Final Year Project)
 
 PalmSecure is a biometric authentication system designed for **contactless palmprint verification**. This project leverages **React Native (Expo)** for the mobile frontend, **Supabase** for database & storage management, and a **Python-based CCNet model backend** for feature extraction & identity verification.
