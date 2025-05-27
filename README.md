@@ -41,6 +41,7 @@ PalmSecure is a biometric authentication system designed for **contactless palmp
 
 ## 🏗️ Project Structure
 
+```
 PalmSecure-App/
 ├── Frontend/                    # React Native app
 │   ├── app/                     # App screens & components
@@ -61,6 +62,7 @@ PalmSecure-App/
 │
 ├── README.md                    # Project documentation
 └── .gitignore                   # Global gitignore settings
+```
 
 ---
 
