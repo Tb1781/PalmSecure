@@ -40,3 +40,166 @@ PalmSecure is a biometric authentication system designed for **contactless palmp
 ---
 
 ## 🏗️ Project Structure
+
+PalmSecure-App/
+├── Frontend/                    # React Native app
+│   ├── app/                     # App screens & components
+│   │   ├── VerifyPalm.js
+│   │   ├── AddUser.js
+│   │   └── utils/               # Supabase client & helpers
+│   ├── assets/                  # Icons, logos, images
+│   ├── package.json             # Frontend dependencies
+│   ├── app.config.js            # Expo app config
+│   └── .env                     # Frontend env variables
+│
+├── verify-backend/             # FastAPI backend
+│   ├── main.py                  # FastAPI app entry point
+│   ├── ccnet\_model.py           # CCNet model loader
+│   ├── feature\_utils.py         # Feature extraction & comparison logic
+│   ├── supabase\_utils.py        # Supabase integration
+│   └── requirements.txt         # Backend dependencies
+│
+├── README.md                    # Project documentation
+└── .gitignore                   # Global gitignore settings
+
+---
+
+## 🛠️ Getting Started
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/PalmSecure.git
+cd PalmSecure-App
+```
+
+### 2️⃣ Install Frontend Dependencies
+
+```bash
+cd Frontend
+npm install
+```
+
+### 3️⃣ Set Up Environment Variables
+
+Create a `.env` file in the **Frontend** folder:
+
+```
+SUPABASE_URL=your-supabase-url
+SUPABASE_ANON_KEY=your-supabase-anon-key
+API_BASE_URL=http://your-backend-url
+```
+
+### 4️⃣ Run the App
+
+```bash
+npx expo start
+```
+
+Access using:
+
+* 📱 Expo Go on physical device
+* 🖥️ Android Emulator
+* 🍏 iOS Simulator
+
+---
+
+## ⚙️ Backend API (FastAPI)
+
+### 1️⃣ Install Backend Requirements
+
+```bash
+cd ../verify-backend
+pip install -r requirements.txt
+```
+
+### 2️⃣ Start the Backend Server
+
+```bash
+uvicorn main:app --reload
+```
+
+### 🔑 Key Endpoints
+
+| Endpoint                 | Description                     |
+| ------------------------ | ------------------------------- |
+| `POST /verify_palm`      | Verifies uploaded palm image    |
+| `POST /extract_features` | Extracts & stores user features |
+
+---
+
+## 🧹 Useful Commands
+
+* Clear Expo cache:
+
+  ```bash
+  npx expo start -c
+  ```
+
+* Trigger feature extraction API after user registration.
+
+* Backend automatically deletes temporary files and Supabase images.
+
+---
+
+## 📝 Technologies Used
+
+| Frontend                        | Backend                    | Database & Storage   |
+| ------------------------------- | -------------------------- | -------------------- |
+| React Native (Expo)             | Python FastAPI             | Supabase             |
+| Expo Camera & Image Manipulator | CCNet (PyTorch)            | Supabase Storage     |
+| Tailwind-like Styling           | Cosine Similarity Matching | Supabase Users Table |
+
+---
+
+## 📈 Workflow Summary
+
+### 👤 User Verification Flow
+
+1. Capture palm image
+2. Upload to Supabase
+3. Backend verifies features
+4. Result shown on app
+
+### 👨‍💼 Admin Registration Flow
+
+1. Upload 4 palm images
+2. Trigger `/extract_features` API
+3. Feature vectors stored (fv1–fv4)
+4. Temporary images deleted
+
+### 🔒 Security & Cleanup
+
+* Supabase RLS policies
+* Backend cleans temp files and Supabase uploads
+
+---
+
+## 🧑‍💻 Team Members
+
+* Muhammad Salar (Lead Developer)
+* Muhammad Hamza
+* Talha Bilal
+* **Supervisor**: Dr. Atif Tahir
+
+---
+
+## 📚 References
+
+* [Supabase Documentation](https://supabase.com/docs)
+* [Expo Documentation](https://docs.expo.dev/)
+* [React Native Docs](https://reactnative.dev/docs/getting-started)
+* [FastAPI Documentation](https://fastapi.tiangolo.com/)
+* [CCNet Paper: "CCNet: A Comprehensive Competition Network for Palmprint Recognition"](https://ieeexplore.ieee.org/document/10223233)
+
+---
+
+## 📃 License
+
+This project is developed for **FAST NUCES Karachi** (FYP 2025).
+
+---
+
+## ⭐ If you found this project helpful, consider giving it a ⭐ on GitHub!
+```
+
