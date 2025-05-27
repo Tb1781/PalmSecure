@@ -43,27 +43,26 @@ PalmSecure is a biometric authentication system designed for **contactless palmp
 
 ```
 PalmSecure-App/
-├── Frontend/                    # React Native app
-│   ├── app/                     # App screens & components
-│   │   ├── VerifyPalm.js
-│   │   ├── AddUser.js
-│   │   └── utils/               # Supabase client & helpers
-│   ├── assets/                  # Icons, logos, images
-│   ├── package.json             # Frontend dependencies
-│   ├── app.config.js            # Expo app config
-│   └── .env                     # Frontend env variables
+├── Frontend/ # React Native app
+│ ├── app/ # App screens & components
+│ ├── assets/ # Icons, logos, images
+│ ├── app.config.js # Expo app config
+│ ├── app.json # Expo app manifest
+│ ├── package.json # Frontend dependencies
+│ └── package-lock.json # Dependency lockfile
 │
-├── verify-backend/             # FastAPI backend
-│   ├── main.py                  # FastAPI app entry point
-│   ├── ccnet\_model.py           # CCNet model loader
-│   ├── feature\_utils.py         # Feature extraction & comparison logic
-│   ├── supabase\_utils.py        # Supabase integration
-│   └── requirements.txt         # Backend dependencies
+├── VerifyBackend/ # FastAPI backend
+│ ├── models/ # Model files
+│ ├── pycache/ # Python compiled files
+│ ├── extract_and_update.py # Feature extraction logic
+│ ├── main.py # FastAPI app entry point
+│ ├── requirements.txt # Backend dependencies
+│ ├── verification.py # Verification logic
+│ └── verifysupabase.py # Supabase integration
 │
-├── README.md                    # Project documentation
+└── README.md # Project documentation               # Project documentation
 └── .gitignore                   # Global gitignore settings
 ```
-
 ---
 
 ## 🛠️ Getting Started
